@@ -143,7 +143,7 @@ function Map() {
 
     return (
         <>
-            <div className='container h-[30rem] flex flex-col gap-8'>
+            <div className='container h-[50rem] flex flex-col gap-8'>
 
                 <p className="text-5xl">Узнайте, вдходит ли ваше помещение в интересующую область вашего города</p>
 
