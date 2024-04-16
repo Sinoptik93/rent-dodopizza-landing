@@ -18,7 +18,7 @@ jobs:
     build:
         runs-on: ubuntu-latest
         env:
-            PUBLIC_YANDEX_METRIKA_ID: ${{ secrets.PUBLIC_GOOGLE_API_KEY }}
+            PUBLIC_GOOGLE_API_KEY: ${{ secrets.PUBLIC_GOOGLE_API_KEY }}
         steps:
             -   name: Check env
                 run:
