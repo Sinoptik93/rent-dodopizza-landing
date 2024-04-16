@@ -1,0 +1,44 @@
+{
+    "extends": "astro/tsconfigs/strictest",
+    "compilerOptions": {
+        "types": [
+            "astro/client"
+        ],
+        "typeRoots": [
+            "./@types"
+        ],
+        "plugins": [
+            {
+                "name": "@astrojs/ts-plugin"
+            }
+        ],
+        "jsx": "react-jsx",
+        "verbatimModuleSyntax": false,
+        "noUnusedParameters": false,
+        "resolveJsonModule": true,
+        "allowJs": true,
+        "allowSyntheticDefaultImports": true,
+        "baseUrl": "./src",
+        "paths": {
+            "@pages/*": [
+                "pages/*"
+            ],
+            "@layouts/*": [
+                "layouts/*"
+            ],
+            "@components/*": [
+                "components/*"
+            ],
+            "@assets/*": [
+                "assets/*"
+            ],
+        }
+    },
+    "include": [
+        "src"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
+}
