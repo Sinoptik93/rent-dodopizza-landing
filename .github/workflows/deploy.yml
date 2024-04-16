@@ -20,10 +20,14 @@ jobs:
         env:
             PUBLIC_YANDEX_METRIKA_ID: ${{ secrets.PUBLIC_GOOGLE_API_KEY }}
         steps:
-            - name: Checkout your repository using git
-              uses: actions/checkout@v4
-            - name: Install, build, and upload your site
-              uses: withastro/action@v2
+            -   name: Check env
+                run:
+                    |
+                    printenv
+            -   name: Checkout your repository using git
+                uses: actions/checkout@v4
+            -   name: Install, build, and upload your site
+                uses: withastro/action@v2
 
     deploy:
         needs: build
@@ -33,6 +37,6 @@ jobs:
             url: ${{ steps.deployment.outputs.page_url }}
 
         steps:
-            - name: Deploy to GitHub Pages
-              id: deployment
-              uses: actions/deploy-pages@v4
+            -   name: Deploy to GitHub Pages
+                id: deployment
+                uses: actions/deploy-pages@v4
