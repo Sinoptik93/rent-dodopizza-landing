@@ -5,7 +5,8 @@ import tailwind from "@astrojs/tailwind";
 
 // https://astro.build/config
 export default defineConfig({
-    site: 'https://dodopizza.github.io',
+    site: 'https://sinoptik93.github.io',
+    base: 'rent-dodopizza-landing',
     integrations: [
         react(),
         tailwind(),
