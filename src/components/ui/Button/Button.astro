@@ -2,13 +2,15 @@
 import {twMerge} from "tailwind-merge";
 interface Props {
     link: string;
+    target?: string;
     accent?: boolean;
 }
 
-const {link, accent} = Astro.props
+const {link, target, accent} = Astro.props
 ---
 
 <a
+    target={target ?? '_self'}
     class={
         twMerge(
             "text-white text-center bg-neutral-900 leading-snug whitespace-nowrap transition-colors",
