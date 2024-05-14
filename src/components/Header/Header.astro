@@ -7,9 +7,9 @@ import DodoLogo from "@assets/icons/logo-dodo.svg";
 import IconBurger from "@assets/icons/icon-burger.svg";
 
 const links = [
-    {title: "Требования к помещениям", href: "#"},
-    {title: "О нас", href: "#"},
-    {title: "Контакты", href: "#"},
+    {title: "Требования к помещениям", href: "#requirements"},
+    {title: "О нас", href: "#about"},
+    {title: "Контакты", href: "#contacts"},
 ];
 ---
 
@@ -21,7 +21,7 @@ const links = [
 
         <nav class={
             twMerge(
-                "gap-6 justify-between items-center w-full max-w-2xl",
+                "gap-6 justify-between items-center w-full max-w-4xl",
                 "hidden",
                 "md:flex"
             )
@@ -36,7 +36,8 @@ const links = [
                 }
             </ul>
 
-            <Button link="#">Предложить свое помещение</Button>
+            <Button link="#map">Предложить свое помещение</Button>
+            <Button accent link="#">Скачать презентацию</Button>
         </nav>
 
         <button

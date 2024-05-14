@@ -85,9 +85,11 @@ function Map() {
         language: 'ru'
     });
     const [center, setCenter] = useState({
-        lat: 57.1530,
-        lng: 65.5343
+        lat: 60.94139999315199,
+        lng: 76.56837353708667
     });
+
+    // ll=60.94139999315199%2C76.56837353708667
 
     const handleLoad = useCallback((map) => {
         setMap(map);
@@ -178,9 +180,8 @@ function Map() {
                         center={center}
                         onLoad={handleLoad}
                         mapContainerStyle={containerStyle}
-                        zoom={12}
+                        zoom={14}
                         options={{
-                            styles: style,
                             disableDefaultUI: true,
                             restriction: {
                                 latLngBounds: mapBounds,
