@@ -173,7 +173,7 @@ function Map() {
                 </div>
 
 
-                <div className="h-[50rem]">
+                <div className="h-2/3">
                     <GoogleMap
                         mapContainerClassName="h-full w-full rounded-3xl overflow-hidden"
                         center={center}
