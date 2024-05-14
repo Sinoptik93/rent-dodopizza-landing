@@ -1,9 +1,17 @@
 import {Navigation, A11y} from 'swiper/modules';
 import {Swiper, SwiperSlide, useSwiper} from 'swiper/react';
 
-import slide1 from "@assets/images/slide-1.png";
-import slide2 from "@assets/images/slide-2.png";
-import slide3 from "@assets/images/slide-3.png";
+import slide1 from "@assets/images/slide-1.jpg";
+import slide2 from "@assets/images/slide-2.jpg";
+import slide3 from "@assets/images/slide-3.jpg";
+import slide4 from "@assets/images/slide-4.jpg";
+import slide5 from "@assets/images/slide-5.jpg";
+import slide6 from "@assets/images/slide-6.jpg";
+import slide7 from "@assets/images/slide-7.jpg";
+import slide8 from "@assets/images/slide-8.jpg";
+import slide9 from "@assets/images/slide-9.jpg";
+import slide10 from "@assets/images/slide-10.jpg";
+import slide11 from "@assets/images/slide-11.jpg";
 import IconArrow from "@assets/icons/icon-arrow.svg?react";
 
 import 'swiper/css';
@@ -15,19 +23,31 @@ const slides = [
         imageSrc: slide1.src,
     },
     {
-        imageSrc: slide2.src,
-    },
-    {
         imageSrc: slide3.src,
     },
     {
-        imageSrc: slide1.src,
+        imageSrc: slide4.src,
     },
     {
-        imageSrc: slide2.src,
+        imageSrc: slide5.src,
     },
     {
-        imageSrc: slide3.src,
+        imageSrc: slide6.src,
+    },
+    {
+        imageSrc: slide7.src,
+    },
+    {
+        imageSrc: slide8.src,
+    },
+    {
+        imageSrc: slide9.src,
+    },
+    {
+        imageSrc: slide10.src,
+    },
+    {
+        imageSrc: slide11.src,
     },
 ];
 
@@ -47,6 +67,7 @@ function Slider() {
                 <Swiper
                     className="h-full rounded-2xl overflow-hidden"
                     modules={[Navigation, A11y]}
+                    loop
                     navigation={{
                         prevEl: '.swiper-button-prev',
                         nextEl: '.swiper-button-next',
