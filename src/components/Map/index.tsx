@@ -1,6 +1,5 @@
 import {memo, useCallback, useState, useEffect, useRef} from 'react';
 import {GoogleMap, Marker, Polygon, useJsApiLoader} from '@react-google-maps/api';
-import SearchIcon from '@assets/icons/search-icon.svg?react';
 
 
 import {
@@ -173,7 +172,7 @@ function Map() {
                 </div>
 
 
-                <div className="h-2/3">
+                <div className="h-[35rem]">
                     <GoogleMap
                         mapContainerClassName="h-full w-full rounded-3xl overflow-hidden"
                         center={center}
