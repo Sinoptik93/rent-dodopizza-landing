@@ -8,6 +8,7 @@ import {
     mapBounds,
     style
 } from './config';
+import {twMerge} from "tailwind-merge";
 
 
 function AutocompleteInput({onAddressSelect}: { onAddressSelect: (e: any) => void; }) {
@@ -36,12 +37,8 @@ function AutocompleteInput({onAddressSelect}: { onAddressSelect: (e: any) => voi
 
     return (
         <div className="relative max-w-3xl">
-            <div className="absolute top-1/2 left-4 -translate-y-1/2 w-6 h-6 text-neutral-500">
-                <SearchIcon/>
-            </div>
-
             <input
-                className="w-full p-2 pl-14 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -54,7 +51,6 @@ function AutocompleteInput({onAddressSelect}: { onAddressSelect: (e: any) => voi
                         setIsFocus(false)
                     }, 200)
                 }}
-                placeholder="Введите адрес"
             />
             {isFocus && suggestions.length > 0 && (
                 <ul className="absolute z-10 w-full bg-white mt-1 max-h-60 overflow-auto border border-gray-300 rounded-md">
@@ -143,69 +139,99 @@ function Map() {
 
     return (
         <>
-            <div className='container h-[50rem] flex flex-col gap-8'>
+            <div className='flex flex-col gap-8'>
+                <div className="flex flex-col md:flex-row">
+                    <div className="flex flex-col gap-4 flex-1">
+                        <h2 className="text-5xl md:text-7xl">Где мы ищем помещения?</h2>
+                        <p>По каждому городу у нас составлена карта развития, в первую очередь нас интересуют помещения
+                            из
+                            выделенных на карте зон. Проверьте, входит ли помещение в зону нашего поиска</p>
+                    </div>
 
-                <p className="text-5xl">Узнайте, вдходит ли ваше помещение в интересующую область вашего города</p>
+                    <div className="flex flex-col gap-4 flex-1">
+                        <p className="text-3xl md:max-w-sm">Проверьте адрес вашего помещения</p>
 
-                <AutocompleteInput
-                    onAddressSelect={handleAddressSelect}
-                />
-                <GoogleMap
-                    mapContainerClassName="h-full w-full rounded-3xl overflow-hidden"
-                    center={center}
-                    onLoad={handleLoad}
-                    mapContainerStyle={containerStyle}
-                    zoom={12}
-                    options={{
-                        styles: style,
-                        disableDefaultUI: true,
-                        restriction: {
-                            latLngBounds: mapBounds,
-                            strictBounds: false,
-                        },
-                    }}
-                    onClick={(e) => {
-                        console.log(`Clicked at lat: ${e.latLng.lat()}, lng: ${e.latLng.lng()}`);
-                    }}
-                >
-                    {markerPosition && <Marker position={markerPosition}/>}
-                    <Polygon
-                        paths={polygonCoords}
+                        <div>
+                            <p className="text-neutral-300">Введите адрес</p>
+                            <AutocompleteInput
+                                onAddressSelect={handleAddressSelect}
+                            />
+                        </div>
+
+                        <button className={
+                            twMerge(
+                                "text-white text-center bg-orange leading-snug whitespace-nowrap transition-colors",
+                                "rounded-lg py-2 px-3 text-sm",
+                                "md:rounded-xl md:py-3 md:px-4 md:w-fit",
+                                "hover:bg-orange-600",
+                            )
+                        }>
+                            Проверить адрес
+                        </button>
+
+                    </div>
+                </div>
+
+
+                <div className="h-[50rem]">
+                    <GoogleMap
+                        mapContainerClassName="h-full w-full rounded-3xl overflow-hidden"
+                        center={center}
+                        onLoad={handleLoad}
+                        mapContainerStyle={containerStyle}
+                        zoom={12}
                         options={{
-                            fillColor: "#ff8800",
-                            fillOpacity: 0.35,
-                            strokeColor: "#ff5900",
-                            strokeOpacity: 0.8,
-                            strokeWeight: 2,
+                            styles: style,
+                            disableDefaultUI: true,
+                            restriction: {
+                                latLngBounds: mapBounds,
+                                strictBounds: false,
+                            },
                         }}
-                    />
+                        onClick={(e) => {
+                            console.log(`Clicked at lat: ${e.latLng.lat()}, lng: ${e.latLng.lng()}`);
+                        }}
+                    >
+                        {markerPosition && <Marker position={markerPosition}/>}
+                        <Polygon
+                            paths={polygonCoords}
+                            options={{
+                                fillColor: "#ff8800",
+                                fillOpacity: 0.35,
+                                strokeColor: "#ff5900",
+                                strokeOpacity: 0.8,
+                                strokeWeight: 2,
+                            }}
+                        />
 
-                    <Polygon
-                        paths={polygonCoords2}
-                        options={{
-                            fillColor: "#ff8800",
-                            fillOpacity: 0.35,
-                            strokeColor: "#ff5900",
-                            strokeOpacity: 0.8,
-                            strokeWeight: 2,
-                        }}
-                    />
-                </GoogleMap>
+                        <Polygon
+                            paths={polygonCoords2}
+                            options={{
+                                fillColor: "#ff8800",
+                                fillOpacity: 0.35,
+                                strokeColor: "#ff5900",
+                                strokeOpacity: 0.8,
+                                strokeWeight: 2,
+                            }}
+                        />
+                    </GoogleMap>
+                </div>
+
 
             </div>
-            {
-                isIntersected !== null && (
-                    <p
-                        className={`pt-10 container text-2xl ${isIntersected ? 'text-green-500' : 'text-red-500'}`}
-                    >
-                        {
-                            isIntersected
-                                ? 'Точка находится внутри выбранной области!'
-                                : 'Точка находится вне выбранной области.'
-                        }
-                    </p>
-                )
-            }
+            {/*{*/}
+            {/*    isIntersected !== null && (*/}
+            {/*        <p*/}
+            {/*            className={`pt-10 container text-2xl ${isIntersected ? 'text-green-500' : 'text-red-500'}`}*/}
+            {/*        >*/}
+            {/*            {*/}
+            {/*                isIntersected*/}
+            {/*                    ? 'Точка находится внутри выбранной области!'*/}
+            {/*                    : 'Точка находится вне выбранной области.'*/}
+            {/*            }*/}
+            {/*        </p>*/}
+            {/*    )*/}
+            {/*}*/}
         </>
 
     );

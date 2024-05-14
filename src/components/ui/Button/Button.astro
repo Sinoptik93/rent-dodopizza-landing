@@ -1,0 +1,24 @@
+---
+import {twMerge} from "tailwind-merge";
+interface Props {
+    link: string;
+    accent?: boolean;
+}
+
+const {link, accent} = Astro.props
+---
+
+<a
+    class={
+        twMerge(
+            "text-white text-center bg-neutral-900 leading-snug whitespace-nowrap transition-colors",
+            "rounded-lg py-2 px-3 text-sm",
+            "md:rounded-xl md:py-3 md:px-4 md:w-fit",
+            "hover:bg-orange-500",
+            accent && "bg-orange text-base hover:bg-orange-600",
+        )
+    }
+    href={link}
+>
+    <slot />
+</a>

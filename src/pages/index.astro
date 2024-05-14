@@ -1,11 +1,290 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Map from '../components/Map';
+import {twMerge} from "tailwind-merge";
+import {Image} from "astro:assets";
+
+
+import Layout from '@layouts/Layout.astro';
+import Map from '@components/Map';
+import Header from '@components/Header/Header.astro';
+import Button from "@components/ui/Button/Button.astro";
+import Slider from "@components/Slider";
+
+import bgMain from "@assets/images/bg-main.png";
+import preview1 from "@assets/images/preview-1.png";
+import preview2 from "@assets/images/preview-2.png";
+
+import iconSize from "@assets/icons/icon-size.svg?raw";
+import iconEnergy from "@assets/icons/icon-energy.svg?raw";
+import iconHeight from "@assets/icons/icon-height.svg?raw";
+import iconShop from "@assets/icons/icon-shop.svg?raw";
+import iconMap from "@assets/icons/icon-map.svg?raw";
+import iconBox from "@assets/icons/icon-box.svg?raw";
+import DodoLogo from "@assets/icons/logo-dodo-dark.svg";
+
+const properties = [
+    {
+        icon: iconSize,
+        title: "Площадь",
+        description: "от 130 м²",
+    },
+    {
+        icon: iconEnergy,
+        title: "Электроэнергия",
+        description: "от 75 кВт, либо возможность увеличения",
+    },
+    {
+        icon: iconHeight,
+        title: "Высота потолков",
+        description: "от 3 метров",
+    },
+    {
+        icon: iconShop,
+        title: "Заметность",
+        description: "отличная видимость, фасад с окнами и вывеской",
+    },
+    {
+        icon: iconMap,
+        title: "Расположение",
+        description: "Первая линия, высокая проходимость",
+    },
+    {
+        icon: iconBox,
+        title: "Вход и этаж",
+        description: "Первый или второй этаж, минимум 2 входа",
+    },
+]
+
+const totalInfo = [
+    {
+        title: "13",
+        description: "лет работы",
+    },
+    {
+        title: "3-е",
+        description: "место в рейтинге самых быстрорастущих ресторанных брендов Европы",
+    },
+    {
+        title: "800+",
+        description: "пиццерий по всей России",
+    },
+    {
+        title: "600+",
+        description: "пиццерий хотим открыть за следующие 3 года",
+    },
+]
 ---
 
 <Layout title="Додо аренда | Демо">
-	<main>
-		<Map client:only="react"/>
-	</main>
+    <Header/>
+
+    <main class="container flex flex-col gap-6 md:gap-20 pb-40">
+        <!-- FIRST -->
+        <div class={
+            twMerge(
+                "flex",
+                "flex-col gap-4",
+                "md:flex-row md:gap-12",
+            )
+        }>
+            <div class="md:w-2/3">
+                <h1
+                    class={
+                        twMerge(
+                            "text-5xl",
+                            "md:text-7xl",
+                        )
+                    }
+                >Ищем помещения для пиццерий</h1>
+            </div>
+
+            <div class="flex flex-col gap-6 md:w-1/3">
+                <h2 class="text-xl">Мы активно масштабируемся и для открытия новых пиццерий нам постоянно требуются
+                    помещения</h2>
+                <Button accent link="#">Предложить помещение</Button>
+            </div>
+        </div>
+
+        <!-- SECOND -->
+        <div class="rounded-3xl overflow-hidden h-64 md:h-96">
+            <Image alt="background-main" class="w-full h-full object-cover block" src={bgMain}/>
+        </div>
+
+        <!-- THIRD -->
+        <div class={
+            twMerge(
+                "flex items-stretch",
+                "flex-col gap-4",
+                "md:flex-row md:gap-12",
+            )
+        }>
+            <div class="w-full flex flex-col gap-4 justify-between">
+                <p class="text-xl md:max-w-sm">
+                    Для наших клиентов «Додо Пицца» – это вкусный продукт, уютный интерьер и любимое место отдыха.
+                </p>
+
+                <div class="w-64 rounded-3xl overflow-hidden">
+                    <Image alt="preview" class="w-full object-cover block" src={preview2}/>
+                </div>
+            </div>
+
+            <div class="hidden md:block w-1 bg-neutral-700"/>
+
+            <div class="w-full flex flex-col gap-4 md:gap-8">
+                <p class="text-xl md:max-w-sm">
+                    А для арендодателя – долгосрочный договор аренды, инвестиции в помещение и стабильная оплата
+                    платежей.
+                </p>
+
+                <div class="rounded-3xl overflow-hidden">
+                    <Image alt="preview" class="w-full object-cover block" src={preview1}/>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOURTH -->
+        <div
+            class={
+                twMerge(
+                    "flex items-stretch border-t-2 pt-8 border-neutral-900",
+                    "flex-col gap-8",
+                    "md:flex-row md:gap-12",
+                )
+            }
+        >
+            <div class="flex flex-col justify-between gap-8 flex-1">
+                <div class="flex flex-col gap-4">
+                    <h2 class="text-5xl md:text-6xl">Какие помещения нам нужны?</h2>
+                    <Button link="#">Проверить подходит ли помещение</Button>
+                </div>
+
+                <div class="flex flex-col gap-4">
+                    <p>Подробная информация для арендодателей:</p>
+                    <Button accent link="#">Скачать презентацию</Button>
+                </div>
+            </div>
+
+            <div class="hidden md:block w-[2px] bg-neutral-700"/>
+
+            <div class="flex flex-col gap-4 flex-1">
+                {
+                    properties.map((property, index) => (
+                        <>
+                            <div class="flex gap-2">
+                                <div class="size-16 rounded-xl bg-neutral-200 p-2">
+                                    <Fragment set:html={property.icon}/>
+                                </div>
+
+                                <div class="flex flex-col justify-between">
+                                    <p class="text-xl">{property.title}</p>
+                                    <p class="text-neutral-500">{property.description}</p>
+                                </div>
+                            </div>
+
+                            {index !== properties.length - 1 &&
+                                <div class="w-full h-[1px] bg-neutral-700"/>}
+                        </>
+
+                    ))
+                }
+            </div>
+        </div>
+
+        <!-- FIFTH -->
+        <Map client:only="react"/>
+
+        <!-- SIX -->
+        <div class="flex flex-col gap-4 md:gap-0 md:flex-row border-b-2 pb-8 border-neutral-900">
+            <div class="flex flex-col gap-4 flex-1">
+                <strong class="font-normal text-5xl md:text-6xl">«Додо Пицца» — крупнейшая сеть пиццерий
+                    в России</strong>
+                <p class="text-xl md:max-w-md">Наша бизнес-миссия — лучшая пицца и лучший сервис. А один из основных
+                    факторов успеха — правильно подобранное помещение.</p>
+            </div>
+
+            <div class="flex flex-col gap-4 flex-1 justify-between">
+                <p class="text-3xl md:max-w-md">Поэтому мы будем рады рассмотреть предложения по долгосрочной аренде
+                    и продаже коммерческой недвижимости.</p>
+                <Button accent link="#">Предложить свое помещение</Button>
+            </div>
+        </div>
+
+        <!-- SEVENTH -->
+        <div class="flex flex-col gap-4 md:gap-6 md:flex-row items-stretch">
+            {
+                totalInfo.map((info, index) => (
+                    <>
+                        <div class="flex flex-col flex-1 md:px-5">
+                            <p class="text-5xl md:text-6xl">{info.title}</p>
+                            <p class="max-w-xs text-xl text-neutral-500">{info.description}</p>
+                        </div>
+
+                        {index !== properties.length - 1 &&
+                            <div class="hidden md:block h-48 w-[1px] bg-neutral-700"/>}
+                    </>
+
+                ))
+            }
+        </div>
+
+        <!-- EIGHT -->
+            <Slider
+                client:only="react"
+            />
+    </main>
+
+    <!-- NINETH -->
+    <footer class="bg-neutral-950 py-5">
+        <div class="container flex flex-col gap-8">
+
+            <div class="flex flex-col md:flex-row justify-between">
+                <div class="w-28">
+                    <Image alt="DodoLogo" class="w-full object-contain block" src={DodoLogo}/>
+                </div>
+
+                <div class="flex gap-8">
+                    <div class="flex flex-col gap-2 flex-1">
+                        <p class="text-white">Партнерам:</p>
+                        <ul class="flex flex-col gap-2">
+                            <li>
+                                <a href="#" class="text-neutral-300">Франшиза</a>
+                            </li>
+                            <li>
+                                <a href="#" class="text-neutral-300">Инвестиции</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="flex flex-col gap-2 flex-1">
+                        <p class="text-white">Контакты:</p>
+                        <ul class="flex flex-col gap-2">
+                            <li>
+                                <a href="#" class="text-neutral-300">Вконтакте</a>
+                            </li>
+                            <li>
+                                <a href="#" class="text-neutral-300">YouTube</a>
+                            </li>
+                            <li>
+                                <a href="#" class="text-neutral-300">Telegram</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="flex flex-col gap-2 flex-1">
+                        <p class="text-white">Почта для обратной связи::</p>
+                        <a href="mailto:realestate@dodopizza.com" class="text-neutral-300">realestate@dodopizza.com</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row justify-between">
+                <div class="flex flex-col md:flex-row md:gap-4">
+                    <a href="#" class="text-white">Политика конфиденциальности</a>
+                    <a href="#" class="text-white">Политика конфиденциальности</a>
+                </div>
+
+                <p class="text-white">© Додо Пицца 2024</p>
+            </div>
+        </div>
+    </footer>
 </Layout>
 

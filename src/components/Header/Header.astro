@@ -1,0 +1,48 @@
+---
+import {Image} from "astro:assets";
+import {twMerge} from "tailwind-merge";
+import Button from "@components/ui/Button/Button.astro";
+
+import DodoLogo from "@assets/icons/logo-dodo.svg";
+import IconBurger from "@assets/icons/icon-burger.svg";
+
+const links = [
+    {title: "Требования к помещениям", href: "#"},
+    {title: "О нас", href: "#"},
+    {title: "Контакты", href: "#"},
+];
+---
+
+<div class="container">
+    <header class="flex justify-between items-center py-6">
+        <div class="w-30">
+            <Image alt="DodoLogo" class="w-full object-contain block" src={DodoLogo}/>
+        </div>
+
+        <nav class={
+            twMerge(
+                "gap-6 justify-between items-center w-full max-w-2xl",
+                "hidden",
+                "md:flex"
+            )
+        }>
+            <ul class="flex justify-between max-w-xl w-full">
+                {
+                    links.map(({title, href}) => (
+                        <li>
+                            <a href={href}>{title}</a>
+                        </li>
+                    ))
+                }
+            </ul>
+
+            <Button link="#">Предложить свое помещение</Button>
+        </nav>
+
+        <button
+            class="block size-8 rounded-xl bg-neutral-200 p-2 md:hidden"
+        >
+            <Image alt="icon-burger" class="w-full object-contain block" src={IconBurger}/>
+        </button>
+    </header>
+</div>
