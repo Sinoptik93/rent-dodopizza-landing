@@ -172,7 +172,7 @@ function Map() {
                                 address && setIsModalOpen(true);
                             }}
                         >
-                            Проверить адрес
+                            Отправить помещение
                         </button>
 
                     </div>

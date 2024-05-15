@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {twMerge} from "tailwind-merge";
 import Modal from "@components/ui/Modal";
 import InputField from "@components/ui/Input/Input";
@@ -24,11 +24,17 @@ const ScreenFirst = ({isValid, onDecline, onAccept}: ScreenFirstProps) => {
                 {
                     isValid
                         ? 'Ваш адрес подходит'
-                        : 'Ваш адрес не подходит'
+                        : 'Ваш адрес не входит в зону нашего поиска'
                 }
             </p>
 
-            <p>Хотите отправить заявку?</p>
+            <p>
+                {
+                    isValid
+                        ? 'Хотите отправить заявку?'
+                        : 'Все равно отправить заявку?'
+                }
+            </p>
 
             <div className="flex gap-4 self-stretch">
                 <button
@@ -169,6 +175,14 @@ const ScreenThird = ({isValid}: { isValid: boolean }) => {
 const FeedbackForm = ({isOpen, onClose, address, isValid}: FeedbackFormProps) => {
     const [activeScreen, setActiveScreen] = useState(0);
 
+    const handleClose = () => {
+        onClose(false)
+    }
+
+    useEffect(() => {
+        setActiveScreen(0);
+    }, [isOpen]);
+
     return (
         <>
             <Modal isOpen={isOpen} onClose={() => onClose(false)}>
@@ -177,7 +191,7 @@ const FeedbackForm = ({isOpen, onClose, address, isValid}: FeedbackFormProps) =>
                     && <ScreenFirst
                         isValid={isValid}
                         onAccept={() => setActiveScreen(1)}
-                        onDecline={() => onClose(false)}
+                        onDecline={handleClose}
                     />
                 }
 
