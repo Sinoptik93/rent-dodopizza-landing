@@ -1,16 +1,22 @@
 import {memo, useCallback, useState, useEffect, useRef} from 'react';
 import {GoogleMap, Marker, Polygon, useJsApiLoader} from '@react-google-maps/api';
+import {twMerge} from "tailwind-merge";
 
+import FeedbackForm from "@components/FeedbackForm";
 
 import {
     containerStyle,
     mapBounds,
     style
 } from './config';
-import {twMerge} from "tailwind-merge";
+import {extractPolygons} from "./utils";
+import geoData from './allGeo';
 
 
-function AutocompleteInput({onAddressSelect}: { onAddressSelect: (e: any) => void; }) {
+function AutocompleteInput({onAddressSelect, onChange}: {
+    onAddressSelect: (e: any) => void;
+    onChange: (address: string) => void;
+}) {
     const [input, setInput] = useState('');
     const [suggestions, setSuggestions] = useState([]);
     const autocompleteRef = useRef(null);
@@ -60,6 +66,7 @@ function AutocompleteInput({onAddressSelect}: { onAddressSelect: (e: any) => voi
                             onMouseDown={() => {
                                 console.log({suggestion})
                                 setInput(suggestion.description);
+                                onChange(suggestion.description);
                                 setSuggestions([]);
                                 onAddressSelect(suggestion.place_id);
                             }}
@@ -74,9 +81,11 @@ function AutocompleteInput({onAddressSelect}: { onAddressSelect: (e: any) => voi
 }
 
 function Map() {
+    const [address, setAddress] = useState('');
     const [map, setMap] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [markerPosition, setMarkerPosition] = useState(null);
-    const [isIntersected, setIsIntersected] = useState<null | boolean>(null);
+    const [isIntersected, setIsIntersected] = useState<boolean>(false);
     const {isLoaded} = useJsApiLoader({
         id: 'google-map-script',
         googleMapsApiKey: import.meta.env.PUBLIC_GOOGLE_API_KEY,
@@ -96,20 +105,7 @@ function Map() {
     }, []);
 
 
-    const polygonCoords = [
-        {lat: 57.16049693745573, lng: 65.52352894588996},
-        {lat: 57.16147436784866, lng: 65.52541722103645},
-        {lat: 57.152816228238386, lng: 65.543527496305},
-        {lat: 57.15127989498743, lng: 65.54181088253547},
-    ];
-
-    const polygonCoords2 = [
-        {lat: 57.17237256905006, lng: 65.55779193883788},
-        {lat: 57.170115796544145, lng: 65.55950855260741},
-        {lat: 57.17060438784419, lng: 65.5661175156201},
-        {lat: 57.173349685536216, lng: 65.5683491135205},
-        {lat: 57.17421045723076, lng: 65.56337093358886},
-    ];
+    const polygonCoords = extractPolygons(geoData);
 
     const handleAddressSelect = (placeId) => {
         const geocoder = new window.google.maps.Geocoder();
@@ -119,7 +115,7 @@ function Map() {
                 setMarkerPosition({lat: location.lat(), lng: location.lng()});
 
                 const point = new google.maps.LatLng(location.lat(), location.lng());
-                const polygon = new google.maps.Polygon({paths: [polygonCoords, polygonCoords2]});
+                const polygon = new google.maps.Polygon({paths: polygonCoords});
 
                 if (google.maps.geometry.poly.containsLocation(point, polygon)) {
                     setIsIntersected(true);
@@ -130,7 +126,7 @@ function Map() {
                 map.zoom = 15;
                 setCenter({lat: location.lat(), lng: location.lng()});
             } else {
-                setIsIntersected(null)
+                setIsIntersected(false)
             }
         });
     };
@@ -156,17 +152,26 @@ function Map() {
                             <p className="text-neutral-300">Введите адрес</p>
                             <AutocompleteInput
                                 onAddressSelect={handleAddressSelect}
+                                onChange={(address) => {
+                                    setAddress(address);
+                                }}
                             />
                         </div>
 
-                        <button className={
+                        <button
+                            type="button"
+                            className={
                             twMerge(
                                 "text-white text-center bg-orange leading-snug whitespace-nowrap transition-colors",
                                 "rounded-lg py-2 px-3 text-sm",
                                 "md:rounded-xl md:py-3 md:px-4 md:w-fit",
                                 "hover:bg-orange-600",
                             )
-                        }>
+                        }
+                            onClick={(e) => {
+                                address && setIsModalOpen(true);
+                            }}
+                        >
                             Проверить адрес
                         </button>
 
@@ -193,32 +198,32 @@ function Map() {
                         }}
                     >
                         {markerPosition && <Marker position={markerPosition}/>}
-                        <Polygon
-                            paths={polygonCoords}
-                            options={{
-                                fillColor: "#ff8800",
-                                fillOpacity: 0.35,
-                                strokeColor: "#ff5900",
-                                strokeOpacity: 0.8,
-                                strokeWeight: 2,
-                            }}
-                        />
 
-                        <Polygon
-                            paths={polygonCoords2}
-                            options={{
-                                fillColor: "#ff8800",
-                                fillOpacity: 0.35,
-                                strokeColor: "#ff5900",
-                                strokeOpacity: 0.8,
-                                strokeWeight: 2,
-                            }}
-                        />
+                        {
+                            polygonCoords.map((polygon, index) => (
+                                <Polygon
+                                    key={index}
+                                    paths={polygon}
+                                    options={{
+                                        fillColor: "#ff8800",
+                                        fillOpacity: 0.35,
+                                        strokeColor: "#ff5900",
+                                        strokeOpacity: 0.8,
+                                        strokeWeight: 2,
+                                    }}
+                                />
+                            ))
+                        }
                     </GoogleMap>
                 </div>
-
-
             </div>
+
+            <FeedbackForm
+                isOpen={isModalOpen}
+                onClose={setIsModalOpen}
+                address={address}
+                isValid={isIntersected}
+            />
             {/*{*/}
             {/*    isIntersected !== null && (*/}
             {/*        <p*/}
