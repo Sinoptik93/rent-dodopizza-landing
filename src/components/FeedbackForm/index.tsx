@@ -94,19 +94,24 @@ const ScreenSecond = ({address, city, onSend}: ScreenSecondProps) => {
         const getUrl = (id: string) => `https://script.google.com/macros/s/${id}/exec`;
         const response = await fetch(getUrl(ID), {
             method: "POST",
+            redirect: "follow",
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "text/plain;charset=utf-8",
             },
             body: JSON.stringify({
-                name,
+                name: name.value,
                 city,
                 address,
-                area,
-                phone,
+                area: area.value,
+                phone: phone.value,
                 email,
-                comments: "Просторное помещение с видом на парк.",
+                comments,
             }),
-        }).then((data) => data.json());
+        }).then(async (data) => {
+            console.log(data);
+
+            return await data.json()
+        });
 
         console.log(response);
 
