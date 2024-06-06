@@ -89,7 +89,7 @@ const ScreenSecond = ({address, city, onSend}: ScreenSecondProps) => {
         };
 
         const ID =
-            "AKfycbwnCpNsKdH4GJju3xtNPzfodJTYY_2-7amPO6BSwYvydMA2gmfMT_9D0lNU4kK1Or3cyA";
+            "AKfycbzpSKsDeMvHPDUu8St61Ndi5Ynw64lGI90jFP7jKhGigE-njMfSMjo4uwZq2O36iVFC";
 
         const getUrl = (id: string) => `https://script.google.com/macros/s/${id}/exec`;
         const response = await fetch(getUrl(ID), {
@@ -110,12 +110,16 @@ const ScreenSecond = ({address, city, onSend}: ScreenSecondProps) => {
         }).then(async (data) => {
             console.log(data);
 
-            return await data.json()
-        });
+                data.text().then(result => console.log(result))
+                return await data.json()
+            });
 
-        console.log(response);
+            console.log(response);
 
-        onSend(response)
+            onSend(response)
+        } catch (e) {
+            console.log(e)
+        }
     };
 
     return (
