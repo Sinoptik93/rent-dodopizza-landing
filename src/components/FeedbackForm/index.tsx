@@ -9,6 +9,7 @@ interface FeedbackFormProps {
     isValid: boolean;
     onClose: (status: boolean) => void;
     address: string;
+    city: string;
 }
 
 interface ScreenFirstProps {
@@ -71,20 +72,45 @@ const ScreenFirst = ({isValid, onDecline, onAccept}: ScreenFirstProps) => {
 
 interface ScreenSecondProps {
     address: string;
-    onSend: () => void;
+    city: string;
+    onSend: ({status}: { status: 'success' | 'error' }) => void;
 }
 
-const ScreenSecond = ({address, onSend}: ScreenSecondProps) => {
-    const [area, setArea] = useState('');
-    const [phone, setPhone] = useState('');
+const ScreenSecond = ({address, city, onSend}: ScreenSecondProps) => {
+    const [name, setName] = useState({isValid: true, value: ''});
+    const [area, setArea] = useState({isValid: true, value: ''});
+    const [phone, setPhone] = useState({isValid: true, value: ''});
     const [email, setEmail] = useState('');
-    const [comment, setComment] = useState('');
+    const [comments, setComments] = useState('');
 
-    const handleSubmit = (e) => {
-        // Обработка отправки формы
-        console.log('Отправка формы', e);
-        console.log({address, area, phone, email, comment});
-        onSend()
+    const handleSubmit = async (e) => {
+        if (!name.value || !area.value || !phone.value) {
+            return;
+        };
+
+        const ID =
+            "AKfycbzpSKsDeMvHPDUu8St61Ndi5Ynw64lGI90jFP7jKhGigE-njMfSMjo4uwZq2O36iVFC";
+
+        const getUrl = (id: string) => `https://script.google.com/macros/s/${id}/exec`;
+        const response = await fetch(getUrl(ID), {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                name,
+                city,
+                address,
+                area,
+                phone,
+                email,
+                comments: "Просторное помещение с видом на парк.",
+            }),
+        }).then((data) => data.json());
+
+        console.log(response);
+
+        onSend(response)
     };
 
     return (
@@ -95,6 +121,23 @@ const ScreenSecond = ({address, onSend}: ScreenSecondProps) => {
             <p className="text-2xl mb-2">Предложите помещение</p>
 
             <InputField
+                label="Имя"
+                value={name.value}
+                isValid={name.isValid}
+                onFocus={() => {
+                    setName((prevValue) => ({...prevValue, isValid: true}))
+                }}
+                onBlur={(e) => {
+                    setName((prevValue) => ({...prevValue, isValid: !!e.target.value}))
+                }}
+                onChange={(e) => setName({
+                    value: e.target.value,
+                    isValid: !!e.target.value
+                })}
+
+            />
+
+            <InputField
                 label="Адрес"
                 value={address}
                 onChange={(e) => {
@@ -102,13 +145,33 @@ const ScreenSecond = ({address, onSend}: ScreenSecondProps) => {
             />
             <InputField
                 label="Площадь"
-                value={area}
-                onChange={(e) => setArea(e.target.value)}
+                value={area.value}
+                isValid={area.isValid}
+                onFocus={(e) => {
+                    setArea((prevValue) => ({...prevValue, isValid: true}))
+                }}
+                onBlur={(e) => {
+                    setArea((prevValue) => ({...prevValue, isValid: !!e.target.value}))
+                }}
+                onChange={(e) => setArea({
+                    value: e.target.value,
+                    isValid: !!e.target.value
+                })}
             />
             <InputField
                 label="Телефон"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                value={phone.value}
+                isValid={phone.isValid}
+                onFocus={(e) => {
+                    setPhone((prevValue) => ({...prevValue, isValid: true}))
+                }}
+                onBlur={(e) => {
+                    setPhone((prevValue) => ({...prevValue, isValid: !!e.target.value}))
+                }}
+                onChange={(e) => setPhone({
+                    value: e.target.value,
+                    isValid: !!e.target.value
+                })}
             />
             <InputField
                 label="E-mail" value={email}
@@ -116,8 +179,8 @@ const ScreenSecond = ({address, onSend}: ScreenSecondProps) => {
             />
             <InputField
                 label="Комментарий к помещению"
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
+                value={comments}
+                onChange={(e) => setComments(e.target.value)}
             />
             <button
                 className={
@@ -172,7 +235,35 @@ const ScreenThird = ({isValid}: { isValid: boolean }) => {
     )
 }
 
-const FeedbackForm = ({isOpen, onClose, address, isValid}: FeedbackFormProps) => {
+const ScreenError = () => {
+    return (
+        <div className="flex flex-col gap-4 items-center py-8">
+            <div className="size-14 bg-orange text-white rounded-xl p-2 ">
+                <IconBuilding/>
+            </div>
+
+            <p className="text-6xl">Что-то пошло не так...</p>
+
+            <div className="flex flex-col text-center gap-4">
+                <p>Произошла ошибка.</p>
+                <p>Ваша заявка не получена. Попробуйте <span className="text-orange"
+                                                             onClick={() => window.location.reload()}>перезагрузить страницу</span> или
+                    написать нам напрямую на почту:
+                </p>
+                <a className="text-orange border-b-2 border-orange" href="mailto:mail@example.com">mail@example.com</a>
+            </div>
+        </div>
+    )
+}
+
+const FeedbackForm = (
+    {
+        isOpen,
+        onClose,
+        address,
+        city,
+        isValid
+    }: FeedbackFormProps) => {
     const [activeScreen, setActiveScreen] = useState(0);
 
     const handleClose = () => {
@@ -199,13 +290,19 @@ const FeedbackForm = ({isOpen, onClose, address, isValid}: FeedbackFormProps) =>
                     activeScreen === 1
                     && <ScreenSecond
                         address={address}
-                        onSend={() => setActiveScreen(2)}
+                        city={city}
+                        onSend={({status}) => status === 'success' ? setActiveScreen(2) : setActiveScreen(3)}
                     />
                 }
 
                 {
                     activeScreen === 2
                     && <ScreenThird isValid={isValid}/>
+                }
+
+                {
+                    activeScreen === 3
+                    && <ScreenError/>
                 }
             </Modal>
         </>

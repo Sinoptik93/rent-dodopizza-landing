@@ -86,6 +86,8 @@ function Map() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [markerPosition, setMarkerPosition] = useState(null);
     const [isIntersected, setIsIntersected] = useState<boolean>(false);
+    const [city, setCity] = useState('');
+
     const {isLoaded} = useJsApiLoader({
         id: 'google-map-script',
         googleMapsApiKey: import.meta.env.PUBLIC_GOOGLE_API_KEY,
@@ -125,6 +127,17 @@ function Map() {
 
                 map.zoom = 15;
                 setCenter({lat: location.lat(), lng: location.lng()});
+
+                const addressComponents = results[0].address_components;
+                const cityComponent = addressComponents.find(component =>
+                    component.types.includes('locality')
+                );
+
+                if (cityComponent) {
+                    setCity(cityComponent.long_name);
+                } else {
+                    setCity('Город не найден');
+                }
             } else {
                 setIsIntersected(false)
             }
@@ -222,6 +235,7 @@ function Map() {
                 isOpen={isModalOpen}
                 onClose={setIsModalOpen}
                 address={address}
+                city={city}
                 isValid={isIntersected}
             />
             {/*{*/}
