@@ -80,6 +80,8 @@ function AutocompleteInput({onAddressSelect, onChange}: {
     );
 }
 
+const libraries = ["places"];
+
 function Map() {
     const [address, setAddress] = useState('');
     const [map, setMap] = useState(null);
@@ -91,7 +93,7 @@ function Map() {
     const {isLoaded} = useJsApiLoader({
         id: 'google-map-script',
         googleMapsApiKey: import.meta.env.PUBLIC_GOOGLE_API_KEY,
-        libraries: ["places"],
+        libraries,
         region: 'RU',
         language: 'ru'
     });
@@ -100,12 +102,9 @@ function Map() {
         lng: 76.56837353708667
     });
 
-    // ll=60.94139999315199%2C76.56837353708667
-
     const handleLoad = useCallback((map) => {
         setMap(map);
     }, []);
-
 
     const polygonCoords = extractPolygons(geoData);
 

@@ -73,23 +73,27 @@ const ScreenFirst = ({isValid, onDecline, onAccept}: ScreenFirstProps) => {
 interface ScreenSecondProps {
     address: string;
     city: string;
+    included: boolean;
     onSend: ({status}: { status: 'success' | 'error' }) => void;
 }
 
-const ScreenSecond = ({address, city, onSend}: ScreenSecondProps) => {
+const ScreenSecond = ({address, city, included, onSend}: ScreenSecondProps) => {
     const [name, setName] = useState({isValid: true, value: ''});
     const [area, setArea] = useState({isValid: true, value: ''});
     const [phone, setPhone] = useState({isValid: true, value: ''});
     const [email, setEmail] = useState('');
     const [comments, setComments] = useState('');
+    const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: any) => {
         if (!name.value || !area.value || !phone.value) {
             return;
         };
 
+        setIsSubmitDisabled(true);
+
         const ID =
-            "AKfycbzpSKsDeMvHPDUu8St61Ndi5Ynw64lGI90jFP7jKhGigE-njMfSMjo4uwZq2O36iVFC";
+            "AKfycbz8jx2M8IzYyNyhtlDPUfUsySth31cPy1zkl7gUyGkttoX9SkgMu0JX2QCpyN_KMxzx";
 
         const getUrl = (id: string) => `https://script.google.com/macros/s/${id}/exec`;
         const response = await fetch(getUrl(ID), {
@@ -101,6 +105,7 @@ const ScreenSecond = ({address, city, onSend}: ScreenSecondProps) => {
             body: JSON.stringify({
                 name: name.value,
                 city,
+                included,
                 address,
                 area: area.value,
                 phone: phone.value,
@@ -108,19 +113,16 @@ const ScreenSecond = ({address, city, onSend}: ScreenSecondProps) => {
                 comments,
             }),
         }).then(async (data) => {
-            console.log(data);
-
             return await data.json()
         });
 
-        console.log(response);
+        setIsSubmitDisabled(false);
 
         onSend(response)
     };
 
     return (
         <form
-            onSubmit={handleSubmit}
             className="flex flex-col gap-1"
         >
             <p className="text-2xl mb-2">Предложите помещение</p>
@@ -145,8 +147,7 @@ const ScreenSecond = ({address, city, onSend}: ScreenSecondProps) => {
             <InputField
                 label="Адрес"
                 value={address}
-                onChange={(e) => {
-                }}
+                onChange={(e) => {}}
             />
             <InputField
                 label="Площадь"
@@ -188,16 +189,17 @@ const ScreenSecond = ({address, city, onSend}: ScreenSecondProps) => {
                 onChange={(e) => setComments(e.target.value)}
             />
             <button
+                type="button"
+                disabled={isSubmitDisabled}
                 className={
                     twMerge(
                         "text-white text-center bg-orange leading-snug whitespace-nowrap flex-1",
                         "rounded-lg py-2 px-3 text-sm",
                         "md:rounded-xl md:py-3 md:px-4",
-                        "hover:bg-orange-600 transition-colors",
+                        "hover:bg-orange-600 disabled:bg-neutral-400 transition-colors",
                     )
                 }
-                onClick={() => {
-                }}
+                onClick={handleSubmit}
             >
                 Отправить
             </button>
@@ -255,7 +257,7 @@ const ScreenError = () => {
                                                              onClick={() => window.location.reload()}>перезагрузить страницу</span> или
                     написать нам напрямую на почту:
                 </p>
-                <a className="text-orange border-b-2 border-orange" href="mailto:mail@example.com">mail@example.com</a>
+                <a className="text-orange" href="mailto:s.malyutenko@dodobrands.io ">s.malyutenko@dodobrands.io </a>
             </div>
         </div>
     )
@@ -296,7 +298,14 @@ const FeedbackForm = (
                     && <ScreenSecond
                         address={address}
                         city={city}
-                        onSend={({status}) => status === 'success' ? setActiveScreen(2) : setActiveScreen(3)}
+                        included={isValid}
+                        onSend={(response) => {
+                            console.log(response)
+
+                            response.status === 'success'
+                                ? setActiveScreen(2)
+                                : setActiveScreen(3)
+                        }}
                     />
                 }
 
