@@ -110,16 +110,12 @@ const ScreenSecond = ({address, city, onSend}: ScreenSecondProps) => {
         }).then(async (data) => {
             console.log(data);
 
-                data.text().then(result => console.log(result))
-                return await data.json()
-            });
+            return await data.json()
+        });
 
-            console.log(response);
+        console.log(response);
 
-            onSend(response)
-        } catch (e) {
-            console.log(e)
-        }
+        onSend(response)
     };
 
     return (
