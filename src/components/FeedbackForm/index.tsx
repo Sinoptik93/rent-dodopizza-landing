@@ -89,7 +89,7 @@ const ScreenSecond = ({address, city, onSend}: ScreenSecondProps) => {
         };
 
         const ID =
-            "AKfycbzpSKsDeMvHPDUu8St61Ndi5Ynw64lGI90jFP7jKhGigE-njMfSMjo4uwZq2O36iVFC";
+            "AKfycbwnCpNsKdH4GJju3xtNPzfodJTYY_2-7amPO6BSwYvydMA2gmfMT_9D0lNU4kK1Or3cyA";
 
         const getUrl = (id: string) => `https://script.google.com/macros/s/${id}/exec`;
         const response = await fetch(getUrl(ID), {
